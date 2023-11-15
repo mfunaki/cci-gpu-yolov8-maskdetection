@@ -11,6 +11,9 @@ jobs:
           name: Check GPU status
           command: nvidia-smi
       - run:
+          name: Set up Hugging Face CLI
+          command:  pip install -U "huggingface_hub[cli]"
+      - run:
           name: Set up MaskDataSet from ROBOFLOW (needs registration)
           command: |
             cd /opt/circleci
@@ -21,10 +24,14 @@ jobs:
       - store_artifacts:
           path: /opt/circleci/.pyenv/runs/detect/train
           destination: train
-      - store_artifacts:
-          path: /opt/circleci/.pyenv/runs/detect/train/exp/weights/best.pt
-          destination: mask_best.pt                         
-
+      - run:
+          name: Upload model to Hugging Face
+          command: |
+            huggingface-cli login --token $HUGGINGFACE_TOKEN --add-to-git-credential
+            huggingface-cli upload mfunaki/cci-gpu-yolov8-maskdetection \
+              /opt/circleci/.pyenv/runs/detect/train/weights/best.pt \
+              https://huggingface.co/mfunaki/cci-gpu-yolov8-maskdetection/tree/main/mask_best.pt
+w
 workflows:
   mask_detection_training:
     jobs:
