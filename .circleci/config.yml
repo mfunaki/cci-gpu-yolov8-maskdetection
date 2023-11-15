@@ -13,9 +13,17 @@ jobs:
       - run:
           name: Set up MaskDataSet from ROBOFLOW (needs registration)
           command: |
-            mkdir MaskDataSet
-            cd MaskDataSet
-            curl -L "https://universe.roboflow.com/ds/3ngtg3QH0C?key=$ROBOFLOW_KEY" > roboflow.zip; unzip roboflow.zip; rm roboflow.zip                        
+            cd /opt/circleci
+            mkdir datasets; cd datasets
+            curl -L "https://universe.roboflow.com/ds/3ngtg3QH0C?key=$ROBOFLOW_KEY" > roboflow.zip; unzip roboflow.zip; rm roboflow.zip
+            pip3 install ultralytics
+            yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=10 imgsz=640 batch=64
+      - store_artifacts:
+          path: ../.pyenv/runs/detect/train
+          destination: train
+      - store_artifacts:
+          path: ../.pyenv/runs/detect/train/exp/weights/best.pt
+          destination: mask_best.pt                         
 
 workflows:
   mask_detection_training:
