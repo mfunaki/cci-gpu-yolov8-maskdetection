@@ -19,10 +19,10 @@ jobs:
             pip3 install ultralytics
             yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=10 imgsz=640 batch=64
       - store_artifacts:
-          path: ../.pyenv/runs/detect/train
+          path: /opt/circleci/.pyenv/runs/detect/train
           destination: train
       - store_artifacts:
-          path: ../.pyenv/runs/detect/train/exp/weights/best.pt
+          path: /opt/circleci/.pyenv/runs/detect/train/exp/weights/best.pt
           destination: mask_best.pt                         
 
 workflows:
