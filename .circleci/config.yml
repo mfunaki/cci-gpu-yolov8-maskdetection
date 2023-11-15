@@ -1,0 +1,22 @@
+version: 2.1
+
+jobs:
+  setup_training_environment:
+    docker:
+      - image: cimg/python:3.9.4
+        auth:
+          username: $DOCKER_HUB_USERNAME
+          password: $DOCKER_HUB_ACCESS_TOKEN
+    steps:
+      - checkout
+      - run:
+          name: Clone YOLOv8 resources
+          command: |
+            git clone https://github.com/ultralytics/ultralytics.git
+
+workflows:
+  mask_detection_training:
+    jobs:
+      - setup_training_environment
+```       context:
+            - docker
