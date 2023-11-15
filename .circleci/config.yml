@@ -31,7 +31,7 @@ jobs:
             huggingface-cli upload mfunaki/cci-gpu-yolov8-maskdetection \
               /opt/circleci/.pyenv/runs/detect/train/weights/best.pt \
               https://huggingface.co/mfunaki/cci-gpu-yolov8-maskdetection/tree/main/mask_best.pt
-w
+
 workflows:
   mask_detection_training:
     jobs:
