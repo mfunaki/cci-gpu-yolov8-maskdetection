@@ -18,5 +18,5 @@ workflows:
   mask_detection_training:
     jobs:
       - setup_training_environment
-```       context:
+          context:
             - docker
