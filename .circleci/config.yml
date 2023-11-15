@@ -27,7 +27,7 @@ jobs:
       - run:
           name: Upload model to Hugging Face
           command: |
-            huggingface-cli login --token $HUGGINGFACE_TOKEN --add-to-git-credential
+            huggingface-cli login --token $HUGGINGFACE_TOKEN
             huggingface-cli upload mfunaki/cci-gpu-yolov8-maskdetection \
               /opt/circleci/.pyenv/runs/detect/train/weights/best.pt \
               mask_best.pt
