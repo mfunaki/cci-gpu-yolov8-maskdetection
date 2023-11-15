@@ -12,9 +12,9 @@ jobs:
           command: nvidia-smi
       - run:
           name: Set up Hugging Face CLI
-          command:  pip install -U "huggingface_hub[cli]"
+          command:  pip3 install -U "huggingface_hub[cli]"
       - run:
-          name: Set up MaskDataSet from ROBOFLOW (needs registration)
+          name: Set up a dataset from ROBOFLOW (needs registration)
           command: |
             cd /opt/circleci
             mkdir datasets; cd datasets
