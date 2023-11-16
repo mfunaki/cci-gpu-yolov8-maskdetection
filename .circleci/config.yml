@@ -22,7 +22,7 @@ jobs:
           name: Set up Hugging Face CLI
           command:  pip3 install -U "huggingface_hub[cli]"
       - run:
-          name: Set up a dataset from ROBOFLOW (needs registration)
+          name: Set up a dataset from ROBOFLOW and build a model
           command: |
             cd /opt/circleci
             mkdir datasets; cd datasets
@@ -33,17 +33,48 @@ jobs:
           path: /opt/circleci/.pyenv/runs/detect/train
           destination: train
       - run:
-          name: Upload model to Hugging Face
+          name: Upload the model to Hugging Face
           command: |
             huggingface-cli login --token $HUGGINGFACE_TOKEN
             huggingface-cli upload mfunaki/cci-gpu-yolov8-maskdetection \
               /opt/circleci/.pyenv/runs/detect/train/weights/best.pt \
               mask_best.pt
+  test_model:
+    machine:
+      resource_class: gpu.nvidia.medium
+      image: linux-cuda-11:default
+    steps:
+      - checkout
+      - run:
+          name: Check GPU status
+          command: nvidia-smi
+      - run:
+          name: Set up Hugging Face CLI
+          command:  pip3 install -U "huggingface_hub[cli]"
+      - run:
+          name: Set up a model from Hugging Face
+          command: |
+            cd /opt/circleci
+            mkdir datasets; cd datasets
+            huggingface-cli login --token $HUGGINGFACE_TOKEN
+            huggingface-cli download mfunaki/cci-gpu-yolov8-maskdetection \
+              mask_best.pt \
+              --local-dir /opt/circleci/.pyenv/runs/detect/train/weights
+            pip3 install ultralytics
+            yolo task=detect mode=predict \
+              model=/opt/circleci/.pyenv/runs/detect/train/weights/mask_best.pt \
+              source=~/projects/images
 
 workflows:
   mask_detection_training:
     when: << pipeline.parameters.build_model >>
     jobs:
       - build_model:
+          context:
+            - docker
+  mask_detection_testing:
+    when: << pipeline.parameters.test_model >>
+    jobs:
+      - test_model:
           context:
             - docker
