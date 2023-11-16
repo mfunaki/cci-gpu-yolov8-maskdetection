@@ -28,6 +28,8 @@ jobs:
           name: Build a model
           command: |
             pip3 install ultralytics
+            pwd
+            ls -la
             yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=100 imgsz=640 batch=64
       - store_artifacts:
           path: /opt/circleci/.pyenv/runs/detect/train
