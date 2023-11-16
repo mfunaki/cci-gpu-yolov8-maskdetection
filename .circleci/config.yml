@@ -28,7 +28,7 @@ jobs:
             mkdir datasets; cd datasets
             curl -L "https://universe.roboflow.com/ds/3ngtg3QH0C?key=$ROBOFLOW_KEY" > roboflow.zip; unzip roboflow.zip; rm roboflow.zip
             pip3 install ultralytics
-            yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=10 imgsz=640 batch=64
+            yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=100 imgsz=640 batch=64
       - store_artifacts:
           path: /opt/circleci/.pyenv/runs/detect/train
           destination: train
