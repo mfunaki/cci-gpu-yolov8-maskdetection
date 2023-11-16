@@ -1,7 +1,15 @@
 version: 2.1
 
+parameters:
+  build_model:
+    type: boolean
+    default: false
+  test_model:
+    type: boolean
+    default: false
+
 jobs:
-  training:
+  build_model:
     machine:
       resource_class: gpu.nvidia.medium
       image: linux-cuda-11:default
@@ -34,7 +42,9 @@ jobs:
 
 workflows:
   mask_detection_training:
+    when:
+      condition: << pipeline.parameters.build_model >>
     jobs:
-      - training:
+      - build_model:
           context:
             - docker
