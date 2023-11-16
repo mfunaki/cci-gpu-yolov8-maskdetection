@@ -42,8 +42,7 @@ jobs:
 
 workflows:
   mask_detection_training:
-    when:
-      condition: << pipeline.parameters.build_model >>
+    when: << pipeline.parameters.build_model >>
     jobs:
       - build_model:
           context:
